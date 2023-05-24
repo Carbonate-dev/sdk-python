@@ -44,6 +44,14 @@ jobs:
     - id: poetry-dep-path
       run: poetry env info -p
 
+
+    - name: Install Chrome
+      uses: browser-actions/setup-chrome@v1
+      if: steps.chrome-cache.outputs.cache-hit != 'true'
+
+    - name: Define chrome path env
+      run: echo "CHROME_PATH=$(which chrome)" >> $GITHUB_ENV
+
     - name: Test with unittest
       run: |
         poetry run python -m unittest
