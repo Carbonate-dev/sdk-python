@@ -1,0 +1,52 @@
+name: Python package
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        poetry-version: ["1.4.2"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: ${{ matrix.poetry-version }}
+
+    - name: Cache Poetry packages
+      id: poetry-cache
+      uses: actions/cache@v3
+      with:
+        path: poetry-dep-path.outputs.stdout
+        key: ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-python-
+
+    - name: Install dependencies
+      run: |
+        poetry install
+      if: steps.poetry-cache.outputs.cache-hit != 'true'
+
+    - id: poetry-dep-path
+      run: poetry env info -p
+
+    - name: Test with unittest
+      run: |
+        poetry run python -m unittest
+      env:
+        CARBONATE_USER_ID: ${{ secrets.CARBONATE_USER_ID }}
+        CARBONATE_API_KEY: ${{ secrets.CARBONATE_API_KEY }}
