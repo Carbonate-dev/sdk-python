@@ -22,7 +22,7 @@ class WebDriverTest(unittest.TestCase):
 
         chrome_options = Options()
         options = [
-            # "--headless",
+            "--headless",
             "--disable-gpu",
             "--window-size=1920,1200",
             "--ignore-certificate-errors",
