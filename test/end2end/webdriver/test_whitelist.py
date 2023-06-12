@@ -23,7 +23,7 @@ class test_whitelist(WebDriverTest):
     @carbonate.test()
     def test_it_should_not_wait_for_whitelisted_xhr(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.whitelistNetwork('https://api.staging.carbonate.dev/internal/test_wait*')
 
@@ -38,7 +38,7 @@ class test_whitelist(WebDriverTest):
     @carbonate.test()
     def test_it_should_not_wait_for_whitelisted_fetch(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.whitelistNetwork('https://api.staging.carbonate.dev/internal/test_wait*')
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "whitelist_fetch.html"))}')

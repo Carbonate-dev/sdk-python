@@ -29,9 +29,9 @@ class test_select(WebDriverTest):
         carbonate.Api.extract_assertions = self.stubbed_extract_assertions
 
     @carbonate.test()
-    def test_select_successful(self):
+    def test_select_by_option(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'click', 'xpath': '//select/option[text()="Two"]'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('select').value == '2'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('select').value == '2');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "select.html"))}')
         self.carbonate_sdk.action('select Two from the dropdown')
@@ -39,9 +39,9 @@ class test_select(WebDriverTest):
         self.assertTrue(self.carbonate_sdk.assertion('the dropdown should be set to Two'))
 
     @carbonate.test()
-    def test_select_not_successful(self):
+    def test_select_by_option_not_successful(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'click', 'xpath': '//select/option[text()="Two"]'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('select').value == '3'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('select').value == '3');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "select.html"))}')
         self.carbonate_sdk.action('select Two from the dropdown')
@@ -49,9 +49,20 @@ class test_select(WebDriverTest):
         self.assertFalse(self.carbonate_sdk.assertion('the dropdown should be set to Three'))
 
     @carbonate.test()
+    def test_select_option_through_select(self):
+        carbonate.Api.extract_actions = lambda *args: [{'action': 'click', 'xpath': '//select'}]
+        carbonate.Api.extract_actions = lambda *args: [{'action': 'click', 'xpath': '//select/option[text()="Two"]'}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('select').value == '2');"}]
+
+        self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "select.html"))}')
+        self.carbonate_sdk.action('select Two from the dropdown')
+
+        self.assertTrue(self.carbonate_sdk.assertion('the dropdown should be set to Two'))
+
+    @carbonate.test()
     def test_label_for(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "label.html"))}')
         self.carbonate_sdk.action('type "teststr" into the input')

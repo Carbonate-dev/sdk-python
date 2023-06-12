@@ -188,7 +188,7 @@ class SDK:
     def perform_assertion(self, assertion):
         self.logger.info("Performing assertion", {'assertion': assertion['assertion']})
 
-        return self.browser.evaluate_script('return ' + assertion['assertion'])
+        return self.browser.evaluate_script('window.__reset_assertion_result(); ' + assertion['assertion'] + '; return window.__assertion_result;')
 
     def cached_lookup(self, instruction):
         if self.cache_dir is not None and os.path.isfile(self.get_cache_path(instruction)):

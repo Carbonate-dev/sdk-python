@@ -31,7 +31,7 @@ class test_render(WebDriverTest):
     @carbonate.test()
     def test_it_should_wait_for_renders_to_finish_for_actions(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "render.html"))}')
         self.carbonate_sdk.action('type "teststr" into the input')
@@ -40,7 +40,7 @@ class test_render(WebDriverTest):
 
     @carbonate.test()
     def test_it_should_wait_for_renders_to_finish_for_assertions(self):
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('label').innerText == 'Test'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('label').innerText == 'Test');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "render.html"))}')
 

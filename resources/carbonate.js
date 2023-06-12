@@ -1,6 +1,7 @@
 (function() {
     window.__dom_updating = true;
     window.__active_xhr = false;
+    window.__assertion_result = undefined;
 
     function debounce(func, delay) {
         let debounceTimer;
@@ -42,6 +43,16 @@
     // Allow XHR/Fetch whitelisting
     window.__set_xhr_whitelist = (whitelist) => {
         urlWhitelist = whitelist.map(url => new RegExp(globToRegex(url)));
+    }
+
+    window.__reset_assertion_result = () => {
+        window.__assertion_result = true;
+    }
+
+    window.assert = (assertion) => {
+        if (assertion === false) {
+            window.__assertion_result = false;
+        }
     }
 
     // Wrap fetches and wait until they're complete

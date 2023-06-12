@@ -31,7 +31,7 @@ class test_wait(WebDriverTest):
     @carbonate.test()
     def test_it_should_wait_for_xhr(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "wait_xhr.html"))}')
 
@@ -43,7 +43,7 @@ class test_wait(WebDriverTest):
 
     @carbonate.test()
     def test_it_should_wait_for_xhr_for_assertions(self):
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == ''"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == '');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "wait_xhr.html"))}')
 
@@ -54,7 +54,7 @@ class test_wait(WebDriverTest):
     @carbonate.test()
     def test_it_should_wait_for_fetch(self):
         carbonate.Api.extract_actions = lambda *args: [{'action': 'type', 'xpath': '//label[@for="input"]', 'text': 'teststr'}]
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == 'teststr'"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == 'teststr');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "wait_fetch.html"))}')
 
@@ -66,7 +66,7 @@ class test_wait(WebDriverTest):
 
     @carbonate.test()
     def test_it_should_wait_for_fetch_for_assertions(self):
-        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "document.querySelector('input').value == ''"}]
+        carbonate.Api.extract_assertions = lambda *args: [{'assertion': "assert(document.querySelector('input').value == '');"}]
 
         self.carbonate_sdk.load(f'file:///{os.path.abspath(os.path.join(".", "test", "fixtures", "wait_fetch.html"))}')
 

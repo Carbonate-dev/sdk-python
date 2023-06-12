@@ -42,7 +42,7 @@ class Api:
                 self.api_url + url,
                 headers={"X-Api-User-Id": self.api_user_id, "X-Api-Key": self.api_key},
                 json=data,
-                timeout=10,
+                timeout=60,
             )
         except RequestException as e:
             raise ApiException(f"Call to {url} failed with exception {e}")
