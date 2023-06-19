@@ -21,18 +21,14 @@ class WebDriver(Browser):
         return self.browser.execute_script("return document.documentElement.innerHTML")
 
     def load(self, url, whitelist=None):
-        self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': self.inject_js})
-
-        if whitelist:
-            self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': 'window.__set_xhr_whitelist(' + json.dumps(whitelist) + ')'})
+        if self.evaluate_script('return typeof window.carbonate_dom_updating === "undefined"'):
+            self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': self.inject_js})
 
         self.browser.get(url)
+        self.evaluate_script('window.carbonate_set_xhr_whitelist(' + json.dumps(whitelist) + ')')
 
     def close(self):
         self.browser.quit()
-
-    def get_screenshot(self):
-        return self.browser.get_screenshot_as_png()
 
     def find_by_xpath(self, xpath):
         return self.browser.find_elements(By.XPATH, xpath)
@@ -54,9 +50,22 @@ class WebDriver(Browser):
                 ActionChains(self.browser).move_to_element(elements[0]).click().perform()
 
         elif action["action"] == Action.TYPE.value:
+            nonTypeable = ['date', 'datetime-local', 'month', 'time', 'week', 'color', 'range']
+            if elements[0].tag_name == "input" and elements[0].get_attribute("type") in nonTypeable:
+                # Not ideal but filling via the UI is not currently possible
+                self.browser.execute_script(
+                    "arguments[0].value = arguments[1];" +
+                    # Trigger onchange manually
+                    "arguments[0].dispatchEvent(new Event('change'), {bubbles: true});",
+                    elements[0], action["text"]
+                )
+
+                return
+
             if elements[0].tag_name == "label":
                 elements = self.find_by_id(elements[0].get_attribute("for"))
 
             elements[0].send_keys(action["text"])
+            self.evaluate_script('!!document.activeElement ? document.activeElement.blur() : 0')
         elif action["action"] == Action.KEY.value:
             elements[0].send_keys(action["key"])

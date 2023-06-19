@@ -26,7 +26,8 @@ class SDK:
         self.test_prefix = None
         self.test_name = None
         self.cache_dir = cache_dir or os.environ.get('CARBONATE_CACHE_DIR')
-        self.networkWhitelist = []
+        self.network_whitelist = []
+        self.instruction_cache = {}
 
         # Log to exception - default
         if logging is None:
@@ -47,12 +48,12 @@ class SDK:
     def wait_for_load(self, skip_func: Callable):
         i = 0
 
-        while self.browser.evaluate_script('return window.__dom_updating') or self.browser.evaluate_script('return window.__active_xhr'):
+        while self.browser.evaluate_script('return window.carbonate_dom_updating') or self.browser.evaluate_script('return window.carbonate_active_xhr'):
             if skip_func():
                 self.logger.info("Found cached element, skipping DOM wait")
                 break
 
-            if self.browser.evaluate_script('return window.__dom_updating'):
+            if self.browser.evaluate_script('return window.carbonate_dom_updating'):
                 self.logger.info("Waiting for DOM update to finish")
             else:
                 self.logger.info("Waiting for active Network to finish")
@@ -89,17 +90,32 @@ class SDK:
 
     def cache_instruction(self, result, instruction):
         if self.cache_dir is not None:
-            # Create the cache directory if it doesn't exist
-            if not os.path.exists(self.cache_dir):
-                os.makedirs(self.cache_dir)
+            self.instruction_cache[instruction] = result
 
-            # Create the test name directory if it doesn't exist
-            if not os.path.exists(self.cache_dir + '/' + slugify(self.test_name)):
-                os.makedirs(self.cache_dir + '/' + slugify(self.test_name))
+    def write_cache(self) -> None:
+        if self.cache_dir is None:
+            raise Exception("Cannot call write_cache without setting cache_dir")
 
+        if self.test_name is None:
+            raise Exception("Test name not set, please call start_Test first")
+
+        if len(self.instruction_cache) == 0:
+            return
+
+        # Create the cache directory if it doesn't exist
+        if not os.path.exists(self.cache_dir):
+            os.makedirs(self.cache_dir)
+
+        # Create the test name directory if it doesn't exist
+        if not os.path.exists(self.cache_dir + '/' + slugify(self.test_name)):
+            os.makedirs(self.cache_dir + '/' + slugify(self.test_name))
+
+        for instruction, result in self.instruction_cache.items():
             # Write the actions to a file
             with open(self.get_cache_path(instruction), 'w') as f:
                 json.dump(result, f)
+
+        self.instruction_cache = []
 
     def cached_assertions(self, instruction):
         if self.cache_dir is not None and os.path.isfile(self.get_cache_path(instruction)):
@@ -188,7 +204,7 @@ class SDK:
     def perform_assertion(self, assertion):
         self.logger.info("Performing assertion", {'assertion': assertion['assertion']})
 
-        return self.browser.evaluate_script('window.__reset_assertion_result(); ' + assertion['assertion'] + '; return window.__assertion_result;')
+        return self.browser.evaluate_script('window.carbonate_reset_assertion_result(); ' + assertion['assertion'] + '; return window.carbonate_assertion_result;')
 
     def cached_lookup(self, instruction):
         if self.cache_dir is not None and os.path.isfile(self.get_cache_path(instruction)):
@@ -229,6 +245,9 @@ class SDK:
         return elements[0]
 
     def start_test(self, test_prefix, test_name):
+        if len(self.instruction_cache.keys()) > 0:
+            raise Exception("Instruction cache not empty, did you forget to call end_test()?")
+
         if hasattr(self.logger, 'clear_logs'):
             self.logger.clear_logs()
 
@@ -236,25 +255,30 @@ class SDK:
         self.test_name = test_name
 
     def end_test(self):
-        self.browser.close()
+        if self.cache_dir is not None:
+            self.write_cache()
 
     def load(self, url):
-        self.logger.info("Loading page", {'url': url, 'whitelist': self.networkWhitelist})
-        self.browser.load(url, self.networkWhitelist)
+        self.logger.info("Loading page", {'url': url, 'whitelist': self.network_whitelist})
+        self.browser.load(url, self.network_whitelist)
 
     def close(self):
         self.logger.info("Closing browser")
         self.browser.close()
 
-    def get_screenshot(self):
-        self.logger.info("Taking screenshot")
-        return self.browser.get_screenshot()
+    def whitelist_network(self, url):
+        self.network_whitelist.append(url)
 
-    def whitelistNetwork(self, url):
-        self.networkWhitelist.append(url)
+    def handle_failed_test(self, e):
+        self.instruction_cache = []
 
-    def handle_test_failure(self, e):
         if hasattr(self.logger, 'get_logs'):
             raise TestException(self.logger.get_logs()) from e
 
         raise e
+
+    def get_logger(self) -> Logger:
+        return self.logger
+
+    def get_browser(self) -> Browser:
+        return self.browser

@@ -1,9 +1,6 @@
 import os
 import unittest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
@@ -12,9 +9,10 @@ from carbonate.test_logger import TestLogger
 
 
 class WebDriverTest(unittest.TestCase):
-    def __init__(self, methodName: str = ...) -> None:
-        super().__init__(methodName)
+    browser = None
 
+    @classmethod
+    def setUpClass(cls) -> None:
         chrome_path = os.getenv('CHROME_PATH')
 
         if not chrome_path:
@@ -34,7 +32,11 @@ class WebDriverTest(unittest.TestCase):
             chrome_options.add_argument(option)
 
         driver = webdriver.Chrome(chrome_path, options=chrome_options)
-        self.browser = carbonate.WebDriver(driver)
+        cls.browser = carbonate.WebDriver(driver)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.browser.close()
 
 if __name__ == "__main__":
     unittest.main()

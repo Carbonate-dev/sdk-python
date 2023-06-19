@@ -17,9 +17,8 @@ def test_decorator(sdk_attribute_name: str = "carbonate_sdk"):
             except unittest.SkipTest:
                 raise
             except Exception as e:  # pylint: disable=broad-except
+                sdk.handle_failed_test(e)
                 sdk.end_test()
-
-                sdk.handle_test_failure(e)
 
             sdk.end_test()
 

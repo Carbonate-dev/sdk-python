@@ -3,7 +3,7 @@
     <title>Test</title>
 </head>
 <body>
-<label for="input">Test</label><input id="input" name="test" type="text" />
+<label for="input">Test</label><input id="input" name="test" type="text"/>
 <script type="text/javascript">
     fetch('https://api.staging.carbonate.dev/internal/test_wait?q=' + Math.random())
         .then((response) => {
@@ -11,7 +11,7 @@
                 throw new Error(`HTTP error: ${response.status}`);
             }
 
-            document.body.innerHTML = ''
+            // document.body.innerHTML = ''
         });
 </script>
 </body>

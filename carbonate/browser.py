@@ -15,10 +15,6 @@ class Browser(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_screenshot(self):
-        pass
-
-    @abstractmethod
     def find_by_xpath(self, xpath):
         pass
 

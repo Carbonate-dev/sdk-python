@@ -1,1 +1,0 @@
-[{"assertion": "assert(document.querySelector('input').value == 'teststr');"}]

@@ -448,6 +448,17 @@ trio = ">=0.11"
 wsproto = ">=0.14"
 
 [[package]]
+name = "unittest-data-provider"
+version = "1.0.1"
+description = "PHPUnit-like @dataprovider decorator for unittest"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "unittest-data-provider-1.0.1.tar.gz", hash = "sha256:86bc7fb6608c2570aeedadea346fe3034afc940807dd7519e95e5dbc899ac2be"},
+]
+
+[[package]]
 name = "urllib3"
 version = "1.26.15"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -503,4 +514,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.14"
-content-hash = "0461356e948ede0f08327344a728dc602da02c139adca31ce254c3937d621937"
+content-hash = "433c06d8c373527374832378266f92782a361e776bb57cd8ecaf7ce634ff6ab5"
