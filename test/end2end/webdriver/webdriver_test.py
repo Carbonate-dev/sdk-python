@@ -3,6 +3,7 @@ import unittest
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 import carbonate
 from carbonate.test_logger import TestLogger
@@ -31,7 +32,7 @@ class WebDriverTest(unittest.TestCase):
         for option in options:
             chrome_options.add_argument(option)
 
-        driver = webdriver.Chrome(chrome_path, options=chrome_options)
+        driver = webdriver.Chrome(service=Service(executable_path=chrome_path), options=chrome_options)
         cls.browser = carbonate.WebDriver(driver)
 
     @classmethod
