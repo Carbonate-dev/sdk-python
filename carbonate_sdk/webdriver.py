@@ -19,6 +19,7 @@ from .exceptions import BrowserException
 class WebDriver(Browser):
     def __init__(self, driver):
         self.browser = driver
+        print(pkg_resources.files('carbonate_sdk.resources'))
         inject_js_resource = pkg_resources.files('carbonate_sdk.resources') / "carbonate.js"
         with inject_js_resource.open("r") as file:
             self.inject_js = file.read()
