@@ -1,10 +1,14 @@
 import os
 import json
-import importlib.resources as pkg_resources
 from selenium.common import ElementNotInteractableException
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    import importlib_resources as pkg_resources
 
 from .browser import Browser
 from .action import Action
