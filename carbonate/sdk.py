@@ -154,7 +154,7 @@ class SDK:
     def perform_actions(self, actions):
         previous_actions = []
         for action in actions:
-            self.logger.info("Performing action", {'action': action})
+            self.logger.notice("Performing action", {'action': action})
             elements = self.browser.find_by_xpath(action['xpath'])
 
             if len(elements) == 0:
@@ -202,7 +202,7 @@ class SDK:
             return False
 
     def perform_assertion(self, assertion):
-        self.logger.info("Performing assertion", {'assertion': assertion['assertion']})
+        self.logger.notice("Performing assertion", {'assertion': assertion['assertion']})
 
         return self.browser.evaluate_script('window.carbonate_reset_assertion_result(); ' + assertion['assertion'] + '; return window.carbonate_assertion_result;')
 
