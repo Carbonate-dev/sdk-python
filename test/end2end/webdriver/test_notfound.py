@@ -2,10 +2,9 @@ import os
 import unittest
 from unittest.mock import Mock
 
-import carbonate
-from carbonate.exceptions import InvalidXpathException
+import carbonate_sdk as carbonate
 from test.end2end.webdriver.webdriver_test import WebDriverTest
-
+from carbonate_sdk.exceptions import InvalidXpathException
 
 class test_notfound(WebDriverTest):
     def setUp(self):

@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import Mock
 
-import carbonate
+import carbonate_sdk as carbonate
 from test.end2end.webdriver.webdriver_test import WebDriverTest
 
 

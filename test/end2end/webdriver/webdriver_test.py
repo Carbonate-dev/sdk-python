@@ -5,8 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
-import carbonate
-from carbonate.test_logger import TestLogger
+import carbonate_sdk as carbonate
 
 
 class WebDriverTest(unittest.TestCase):
@@ -21,7 +20,7 @@ class WebDriverTest(unittest.TestCase):
 
         chrome_options = Options()
         options = [
-            "--headless",
+            # "--headless",
             "--disable-gpu",
             "--window-size=1920,1200",
             "--ignore-certificate-errors",

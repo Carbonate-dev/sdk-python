@@ -1,8 +1,6 @@
 import unittest
 import functools
 
-from carbonate.exceptions import TestException
-
 def test_decorator(sdk_attribute_name: str = "carbonate_sdk"):
     def inner_decorator(func):
         @functools.wraps(func)

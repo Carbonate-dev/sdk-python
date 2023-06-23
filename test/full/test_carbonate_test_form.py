@@ -1,9 +1,4 @@
-import os
-import unittest
-import carbonate
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
+import carbonate_sdk as carbonate
 from selenium.webdriver.support.select import Select
 from test.end2end.webdriver.webdriver_test import WebDriverTest
 

@@ -4,8 +4,7 @@ import time
 import unittest
 from unittest.mock import Mock
 
-import carbonate
-from carbonate.test_logger import TestLogger
+import carbonate_sdk as carbonate
 from test.end2end.webdriver.webdriver_test import WebDriverTest
 from unittest_data_provider import data_provider
 

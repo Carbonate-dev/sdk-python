@@ -2,9 +2,7 @@ import os
 import unittest
 from unittest.mock import Mock
 
-import carbonate
-from carbonate.exceptions import InvalidXpathException
-from test.end2end.webdriver.test_render import test_render
+import carbonate_sdk as carbonate
 from test.end2end.webdriver.webdriver_test import WebDriverTest
 
 class test_render_cached(WebDriverTest):

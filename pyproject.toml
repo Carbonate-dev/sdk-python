@@ -1,10 +1,11 @@
 [tool.poetry]
-name = "carbonate-python"
+name = "carbonate-sdk"
 version = "0.1.0"
 description = "Run UI tests using AI"
 authors = ["Carbonate <team@cabonate.dev>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "carbonate_sdk"}]
 
 [tool.poetry.dependencies]
 python = "^3.8.14"

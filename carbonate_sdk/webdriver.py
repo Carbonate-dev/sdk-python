@@ -1,5 +1,6 @@
 import os
 import json
+import importlib.resources as pkg_resources
 from selenium.common import ElementNotInteractableException
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver import ActionChains
@@ -8,13 +9,13 @@ from selenium.webdriver.common.by import By
 from .browser import Browser
 from .action import Action
 from .exceptions import BrowserException
-
+from . import resources
 
 class WebDriver(Browser):
     def __init__(self, driver):
         self.browser = driver
-        inject_js_path = os.path.join(os.path.dirname(__file__), "../resources/carbonate.js")
-        with open(inject_js_path, "r") as file:
+        inject_js_resource = pkg_resources.files(resources) / "carbonate.js"
+        with inject_js_resource.open("r") as file:
             self.inject_js = file.read()
 
     def get_html(self):

@@ -2,8 +2,7 @@ import os
 from typing import Optional
 from requests import Session, RequestException
 
-from carbonate.exceptions import ApiException
-
+from .exceptions import ApiException
 
 class Api:
     def __init__(
