@@ -7,6 +7,8 @@ from selenium.webdriver.common.by import By
 
 try:
     import importlib.resources as pkg_resources
+    if not hasattr(pkg_resources, 'files'):
+        raise ImportError
 except ImportError:
     import importlib_resources as pkg_resources
 
