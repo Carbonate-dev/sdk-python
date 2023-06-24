@@ -11,8 +11,7 @@ class test_carbonate_test_form(WebDriverTest):
     @carbonate.test()
     def test_birthday_event_type(self):
         self.carbonate_sdk.load(
-            # 'https://carbonate.dev/demo-form',
-            'https://testbot-website.vercel.app/demo-form'
+            'https://carbonate.dev/demo-form'
         )
 
         self.carbonate_sdk.action('chose Birthday as the event type')
