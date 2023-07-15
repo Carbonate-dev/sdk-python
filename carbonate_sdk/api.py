@@ -14,7 +14,7 @@ class Api:
         self.test_name = None
         self.api_user_id = api_user_id or os.environ.get("CARBONATE_USER_ID")
         self.api_key = api_key or os.environ.get("CARBONATE_API_KEY")
-        self.api_url = api_url or "https://api.staging.carbonate.dev/"
+        self.api_url = api_url or "https://api.carbonate.dev/"
         self.client = Session()
 
         if not self.api_user_id:
