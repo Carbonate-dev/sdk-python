@@ -36,7 +36,8 @@ class WebDriverTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        cls.browser.close()
+        if cls.browser:
+            cls.browser.close()
 
 if __name__ == "__main__":
     unittest.main()
