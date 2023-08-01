@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Optional
+from typing import Optional, List
 
 from selenium.common import ElementNotInteractableException
 from selenium.common.exceptions import JavascriptException
@@ -21,14 +21,14 @@ from .exceptions import BrowserException
 class WebDriver(Browser):
     def __init__(self, driver) -> None:
         self.browser = driver
-        inject_js_resource = pkg_resources.files('carbonate_sdk.resources') / "carbonate.js"
+        inject_js_resource = pkg_resources.files('carbonate_sdk.resources') / "carbonate.js" # type: ignore[attr-defined]
         with inject_js_resource.open("r") as file:
             self.inject_js = file.read()
 
     def get_html(self) -> str:
         return self.browser.execute_script("return document.documentElement.innerHTML")
 
-    def load(self, url: str, whitelist: Optional[list[str]]=None) -> None:
+    def load(self, url: str, whitelist: Optional[List[str]]=None) -> None:
         if self.evaluate_script('return typeof window.carbonate_dom_updating === "undefined"'):
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': self.inject_js})
 

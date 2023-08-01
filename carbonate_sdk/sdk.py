@@ -1,7 +1,7 @@
 import os
 import json
 from time import sleep
-from typing import List, Callable, Optional, IO, Union, Any
+from typing import List, Callable, Optional, IO, Union, Any, Dict
 from .browser import Browser
 from .api import Api
 from .exceptions import FailedExtractionException, InvalidXpathException, BrowserException, TestException, \
@@ -25,8 +25,8 @@ class SDK:
         self.test_prefix: Optional[str] = None
         self.test_name: Optional[str] = None
         self.cache_dir = cache_dir or os.environ.get('CARBONATE_CACHE_DIR')
-        self.network_whitelist: list[str] = []
-        self.instruction_cache: dict[str, Any] = {}
+        self.network_whitelist: List[str] = []
+        self.instruction_cache: Dict[str, Any] = {}
 
         # Log to exception - default
         if logging is None:
