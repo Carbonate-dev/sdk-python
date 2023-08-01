@@ -41,8 +41,9 @@ jobs:
         poetry install
       if: steps.poetry-cache.outputs.cache-hit != 'true'
 
-    - id: poetry-dep-path
-      run: poetry env info -p
+    - name: Run mypy
+      run: |
+        poetry run mypy .
 
     - name: Test with unittest
       run: |

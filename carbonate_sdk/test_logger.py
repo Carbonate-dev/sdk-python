@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 from .logger import Logger
 
 class TestLogger(Logger):
-    def __init__(self, output_path = sys.stderr, buffer_logs = True):
+    def __init__(self, output_path=sys.stderr, buffer_logs: bool=True):
         if isinstance(output_path, str):
             output_path = open(output_path, 'w')
 

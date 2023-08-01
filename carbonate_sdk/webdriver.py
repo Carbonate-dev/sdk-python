@@ -1,5 +1,7 @@
 import os
 import json
+from typing import Optional, List
+
 from selenium.common import ElementNotInteractableException
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver import ActionChains
@@ -10,45 +12,45 @@ try:
     if not hasattr(pkg_resources, 'files'):
         raise ImportError
 except ImportError:
-    import importlib_resources as pkg_resources
+    import importlib_resources as pkg_resources # type: ignore
 
 from .browser import Browser
 from .action import Action
 from .exceptions import BrowserException
 
 class WebDriver(Browser):
-    def __init__(self, driver):
+    def __init__(self, driver) -> None:
         self.browser = driver
-        inject_js_resource = pkg_resources.files('carbonate_sdk.resources') / "carbonate.js"
+        inject_js_resource = pkg_resources.files('carbonate_sdk.resources') / "carbonate.js" # type: ignore[attr-defined]
         with inject_js_resource.open("r") as file:
             self.inject_js = file.read()
 
-    def get_html(self):
+    def get_html(self) -> str:
         return self.browser.execute_script("return document.documentElement.innerHTML")
 
-    def load(self, url, whitelist=None):
+    def load(self, url: str, whitelist: Optional[List[str]]=None) -> None:
         if self.evaluate_script('return typeof window.carbonate_dom_updating === "undefined"'):
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': self.inject_js})
 
         self.browser.get(url)
         self.evaluate_script('window.carbonate_set_xhr_whitelist(' + json.dumps(whitelist) + ')')
 
-    def close(self):
+    def close(self) -> None:
         self.browser.quit()
 
-    def find_by_xpath(self, xpath):
+    def find_by_xpath(self, xpath: str) -> list:
         return self.browser.find_elements(By.XPATH, xpath)
 
-    def find_by_id(self, id):
+    def find_by_id(self, id: str) -> list:
         return self.browser.find_elements(By.ID, id)
 
-    def evaluate_script(self, script):
+    def evaluate_script(self, script: str) -> str:
         try:
             return self.browser.execute_script(script)
         except JavascriptException as e:
             raise BrowserException("Could not evaluate script: " + script) from e
 
-    def perform_action(self, action, elements):
+    def perform_action(self, action: dict, elements: list) -> None:
         if action["action"] == Action.CLICK.value:
             try:
                 elements[0].click()

@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Union
 from requests import Session, RequestException
 
 from .exceptions import ApiException
@@ -10,7 +10,7 @@ class Api:
         api_user_id: Optional[str] = None,
         api_key: Optional[str] = None,
         api_url: Optional[str] = None,
-    ):
+    ) -> None:
         self.test_name = None
         self.api_user_id = api_user_id or os.environ.get("CARBONATE_USER_ID")
         self.api_key = api_key or os.environ.get("CARBONATE_API_KEY")
@@ -27,7 +27,7 @@ class Api:
                 "No API key provided, please either pass in api_key to the constructor or set the CARBONATE_API_KEY environment variable"
             )
 
-    def set_test(self, test):
+    def set_test(self, test) -> None:
         self.test_name = test
 
     def call_api(self, url: str, data: dict):
