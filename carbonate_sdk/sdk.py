@@ -5,7 +5,7 @@ from typing import List, Callable, Optional, IO, Union, Any
 from .browser import Browser
 from .api import Api
 from .exceptions import FailedExtractionException, InvalidXpathException, BrowserException, TestException, \
-    CarbonateException
+    LogicException
 from .logger import Logger
 from .slugify import slugify
 from .test_logger import TestLogger
@@ -40,7 +40,7 @@ class SDK:
 
     def get_test_name(self) -> str:
         if self.test_name is None:
-            raise CarbonateException("Test name not set, please call start_test first")
+            raise LogicException("Test name not set, please call start_test first")
 
         if self.test_prefix:
             return self.test_prefix + ': ' + self.test_name
@@ -68,7 +68,7 @@ class SDK:
 
     def get_cache_path(self, instruction) -> str:
         if self.cache_dir is None:
-            raise CarbonateException("No cache dir set")
+            raise LogicException("No cache dir set")
 
         return self.cache_dir + '/' + slugify(self.test_name) + '/' + slugify(instruction) + '.json'
 
@@ -99,10 +99,10 @@ class SDK:
 
     def write_cache(self) -> None:
         if self.cache_dir is None:
-            raise CarbonateException("Cannot call write_cache without setting cache_dir")
+            raise LogicException("Cannot call write_cache without setting cache_dir")
 
         if self.test_name is None:
-            raise CarbonateException("Test name not set, please call start_test first")
+            raise LogicException("Test name not set, please call start_test first")
 
         if len(self.instruction_cache) == 0:
             return
@@ -251,7 +251,7 @@ class SDK:
 
     def start_test(self, test_prefix: str, test_name: str) -> None:
         if len(self.instruction_cache.keys()) > 0:
-            raise Exception("Instruction cache not empty, did you forget to call end_test()?")
+            raise LogicException("Instruction cache not empty, did you forget to call end_test()?")
 
         if hasattr(self.logger, 'clear_logs'):
             self.logger.clear_logs()

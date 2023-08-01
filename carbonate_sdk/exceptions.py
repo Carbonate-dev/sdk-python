@@ -1,6 +1,9 @@
 class CarbonateException(Exception):
     pass
 
+class LogicException(CarbonateException):
+    pass
+
 class ApiException(CarbonateException):
     pass
 
