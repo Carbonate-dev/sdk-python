@@ -16,7 +16,7 @@ class WebDriverTest(unittest.TestCase):
         chrome_path = os.getenv('CHROME_PATH')
 
         if not chrome_path:
-            chrome_path = ChromeDriverManager().install()
+            chrome_path = ChromeDriverManager(driver_version='114.0.5735.16').install()
 
         chrome_options = Options()
         options = [
